@@ -1,4 +1,4 @@
-import { MongoDB } from "../main/index.js"
+import { convertSchemaToSchemaDefinition } from "../main/Schema.js"
 import mocha from "mocha"
 import chai from "chai"
 import mongoose from "mongoose"
@@ -13,7 +13,7 @@ mocha.describe("MongoDB schema tests", () => {
         }
 
         // Act
-        const resultSchema = MongoDB.convertSchemaToSchemaDefinition(schema)
+        const resultSchema = convertSchemaToSchemaDefinition(schema)
 
         // Assert
         Object.keys(resultSchema).should.have.length(1)
@@ -37,7 +37,7 @@ mocha.describe("MongoDB schema tests", () => {
         }
 
         // Act
-        const resultSchema = MongoDB.convertSchemaToSchemaDefinition(schema)
+        const resultSchema = convertSchemaToSchemaDefinition(schema)
 
         // Assert
         const keys = Object.keys(resultSchema)
