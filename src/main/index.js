@@ -38,9 +38,12 @@ class Model {
         return mongoObject.save()
     }
 
+    async getById(id) {
+        return await this.#model.findOne({ _id: id })
+    }
+
     async getAll() {
-        const allObjects = await this.#model.find()
-        return allObjects
+        return await this.#model.find()
     }
 }
 
