@@ -1,5 +1,5 @@
 import mongoose from "mongoose"
-import { Required, convertSchemaToSchemaDefinition } from "./Schema.js"
+import { Required as RequiredConstructor, convertSchemaToSchemaDefinition } from "./Schema.js"
 
 class MongoInstance {
     /** @type {typeof mongoose} */
@@ -48,7 +48,12 @@ class Model {
     }
 }
 
-export { Required }
+/**
+ * @param {new (...args: any[]) => any} type
+ */
+export function Required(type) {
+    return new RequiredConstructor(type)
+}
 
 export class MongoDB {
     static convertSchema(schema) {
