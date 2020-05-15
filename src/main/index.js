@@ -15,22 +15,32 @@ class MongoInstance {
      * @param {string} name
      * @param {*} schema
      */
-    getModel(name, schema) {
-        const mongoModel = this.#connection.model(name, MongoDB.convertSchema(schema))
+    async getModel(name, schema) {
+        const mongoModel = await this.#connection.model(name, MongoDB.convertSchema(schema))
 
-        return class {
-            #model = mongoModel
+        return new Model(mongoModel)
+    }
+}
 
-            save(object) {
-                const mongoObject = new this.#model("toJSON" in object ? object.toJSON() : object)
-                return mongoObject.save()
-            }
+class Model {
+    /** @type {mongoose.Model<mongoose.Document, {}>} */
+    #model
 
-            async getAll() {
-                const allObjects = await this.#model.find()
-                return allObjects
-            }
-        }
+    /**
+     * @param {mongoose.Model<mongoose.Document, {}>} mongoModel
+     */
+    constructor(mongoModel) {
+        this.#model = mongoModel
+    }
+
+    save(object) {
+        const mongoObject = new this.#model("toJSON" in object ? object.toJSON() : object)
+        return mongoObject.save()
+    }
+
+    async getAll() {
+        const allObjects = await this.#model.find()
+        return allObjects
     }
 }
 
