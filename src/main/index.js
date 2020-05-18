@@ -39,6 +39,10 @@ class Model {
         return mongoObject.save()
     }
 
+    async update(id, object) {
+        return await this.#model.findOneAndUpdate({ _id: id }, object)
+    }
+
     async getById(id) {
         return await this.#model.findOne({ _id: id })
     }
