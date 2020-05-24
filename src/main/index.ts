@@ -1,47 +1,82 @@
 import mongoose from "mongoose"
-import { Required as RequiredConstructor, convertSchemaToSchemaDefinition } from "./Schema"
 
-class MongoInstance {
-    public constructor(private readonly connection = mongoose) {}
+class Model<T> {
+    public constructor(private readonly model: mongoose.Model<mongoose.Document & T, {}>) {}
 
-    public getModel(name: string, schema: any): Model {
-        const mongoModel = this.connection.model(name, MongoDB.convertSchema(schema))
-
-        return new Model(mongoModel)
-    }
-}
-
-class Model {
-    public constructor(private readonly model: mongoose.Model<mongoose.Document, {}>) {}
-
-    public async save(object: any): Promise<mongoose.Document> {
+    public async save(object: any): Promise<T> {
         const mongoObject = new this.model("toJSON" in object ? object.toJSON() : object)
         return mongoObject.save()
     }
 
-    public async update(id: string, object: any): Promise<mongoose.Document | null> {
-        return this.model.findOneAndUpdate({ _id: id }, object)
+    public async update(id: string, object: any): Promise<T | null> {
+        return this.model.findByIdAndUpdate(id, object)
     }
 
-    public async getById(id: string): Promise<mongoose.Document | null> {
-        return this.model.findOne({ _id: id })
+    public async getById(id: string): Promise<T | null> {
+        return this.model.findById(id)
     }
 
-    public async getAll(): Promise<mongoose.Document[]> {
+    public async getAll(): Promise<T[]> {
         return this.model.find()
     }
 }
 
-export function Required(type: new (...args: any[]) => any): RequiredConstructor {
-    return new RequiredConstructor(type)
+export type SchemaDefinition = mongoose.SchemaDefinition
+
+export type SchemaType =
+    typeof mongoose.Schema.Types.ObjectId |
+    typeof mongoose.Schema.Types.DocumentArray |
+    typeof mongoose.Schema.Types.Mixed |
+    typeof mongoose.Schema.Types.Embedded |
+    typeof mongoose.Schema.Types.Decimal128 |
+    typeof String |
+    typeof Number |
+    typeof Date |
+    typeof Array |
+    typeof Buffer |
+    typeof Boolean |
+    typeof Map
+
+export function required(type: SchemaType): { type: SchemaType; required: true } {
+    return {
+        type,
+        required: true
+    }
 }
 
-export const MongoDB = {
-    convertSchema: (schema: any): mongoose.Schema =>
-        new mongoose.Schema(convertSchemaToSchemaDefinition(schema)),
+export function optional(type: SchemaType): { type: SchemaType; required: false } {
+    return {
+        type,
+        required: false
+    }
+}
 
-    connect: async (url: string, useNewUrlParser = true, useUnifiedTopology = true): Promise<MongoInstance> => {
+export const Types = {
+    ID: mongoose.SchemaTypes.ObjectId as SchemaType,
+    DocumentArray: mongoose.SchemaTypes.DocumentArray as SchemaType,
+    Mixed: mongoose.SchemaTypes.Mixed as SchemaType,
+    Embedded: mongoose.SchemaTypes.Embedded as SchemaType,
+    Decimal128: mongoose.SchemaTypes.Decimal128 as SchemaType,
+    String: String as SchemaType,
+    Number: Number as SchemaType,
+    Date: Date as SchemaType,
+    Array: Array as SchemaType,
+    Buffer: Buffer as SchemaType,
+    Boolean: Boolean as SchemaType,
+    Map: Map as SchemaType
+}
+
+export class MongoDB {
+    private constructor(private readonly connection = mongoose) {}
+
+    public getModel<T>(name: string, schema: SchemaDefinition): Model<T> {
+        const mongoModel = this.connection.model<mongoose.Document & T>(name, new mongoose.Schema(schema))
+
+        return new Model<T>(mongoModel)
+    }
+
+    public static async connect(url: string, useNewUrlParser = true, useUnifiedTopology = true): Promise<MongoDB> {
         const connection = await mongoose.connect(url, { useNewUrlParser, useUnifiedTopology })
-        return new MongoInstance(connection)
+        return new MongoDB(connection)
     }
 }
