@@ -1,7 +1,6 @@
 import mongoose from "mongoose"
 
-/** @type {ReadonlyMap<new(...args) => any, typeof mongoose.SchemaType>} */
-const schemaMap = (() => {
+const schemaMap = ((): ReadonlyMap<new(...args: any[]) => any, typeof mongoose.SchemaType> => {
     const tmp0 = new Map()
     tmp0.set(String, mongoose.SchemaTypes.String)
     tmp0.set(Number, mongoose.SchemaTypes.Number)
@@ -14,29 +13,17 @@ const schemaMap = (() => {
 })()
 
 export class Required {
-    /** @type {new(...args) => any} type */
-    #type
-
-    /**
-     * @param {new(...args) => any} type
-     */
-    constructor(type) {
-        this.#type = type
-    }
-
-    get type() {
-        return this.#type
-    }
+    public constructor(public readonly type: new(...args: any[]) => any) {}
 }
 
-export function getType(type) {
-    for(const [constructor, mongooseSchemaType] of schemaMap) {
-        if(type === constructor) {
+export function getType(type: new(...args: any[]) => any): any {
+    for (const [constructor, mongooseSchemaType] of schemaMap) {
+        if (type === constructor) {
             return mongooseSchemaType
         }
     }
 
-    if(type instanceof Required) {
+    if (type instanceof Required) {
         return {
             type: getType(type.type),
             required: true
@@ -46,19 +33,19 @@ export function getType(type) {
     return null
 }
 
-export function convertSchemaToSchemaDefinition(schema) {
-    /** @type {mongoose.SchemaDefinition} */
-    const mongoSchema = {}
+export function convertSchemaToSchemaDefinition(schema: any): mongoose.SchemaDefinition {
+    const mongoSchema: mongoose.SchemaDefinition = {}
 
     for (const prop of Object.keys(schema)) {
         const foundType = getType(schema[prop])
 
-        if(foundType != null) {
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+        if (foundType !== null) {
             mongoSchema[prop] = foundType
         } else {
-            if(schema[prop] instanceof Array) {
-                mongoSchema[prop] = schema[prop].map(it => convertSchemaToSchemaDefinition(it))
-            } else if(schema[prop] instanceof Object) {
+            if (schema[prop] instanceof Array) {
+                mongoSchema[prop] = schema[prop].map((it: any) => convertSchemaToSchemaDefinition(it))
+            } else if (schema[prop] instanceof Object) {
                 mongoSchema[prop] = convertSchemaToSchemaDefinition(schema[prop])
             }
         }
