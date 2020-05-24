@@ -1,26 +1,6 @@
 import mongoose from "mongoose"
+import { Model } from "./Model"
 import { tryFunction } from "./asyncUtils"
-
-class Model<T> {
-    public constructor(private readonly model: mongoose.Model<mongoose.Document & T, {}>) {}
-
-    public async save(object: any): Promise<T> {
-        const mongoObject = new this.model("toJSON" in object ? object.toJSON() : object)
-        return mongoObject.save()
-    }
-
-    public async update(id: string, object: any): Promise<T | null> {
-        return this.model.findByIdAndUpdate(id, object)
-    }
-
-    public async getById(id: string): Promise<T | null> {
-        return this.model.findById(id)
-    }
-
-    public async getAll(): Promise<T[]> {
-        return this.model.find()
-    }
-}
 
 export type SchemaDefinition = mongoose.SchemaDefinition
 
@@ -70,7 +50,7 @@ export const Types = {
 export class MongoDB {
     private constructor(private readonly connection = mongoose) {}
 
-    public getModel<T>(name: string, schema: SchemaDefinition): Model<T> {
+    public getModel<T extends Object>(name: string, schema: SchemaDefinition): Model<T> {
         const mongoModel = this.connection.model<mongoose.Document & T>(name, new mongoose.Schema(schema))
 
         return new Model<T>(mongoModel)
