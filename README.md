@@ -8,7 +8,7 @@ Very simple and minimal mongoose wrapper.
 ## Demo
 ```TypeScript
 // @peregrine/mongo-connect for npm, @marc-jb/mongo-connect for GitHub Packages
-import { MongoDB, required } from "mongo-connect"
+import { MongoDB, Model, required } from "mongo-connect"
 
 type Nullable<T> = T | null
 

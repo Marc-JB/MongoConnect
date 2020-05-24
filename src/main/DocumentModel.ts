@@ -12,12 +12,12 @@ export class DocumentModel<T extends Object> {
         return { id: _id, ...(t as unknown as T) }
     }
 
-    public async getById(id: string): Promise<T | null> {
+    public async getById(id: string): Promise<WithId<T> | null> {
         const model = await this.model.findById(id)
         return model === null ? null : DocumentModel.convert<T>(model.toObject())
     }
 
-    public async getAll(): Promise<T[]> {
+    public async getAll(): Promise<WithId<T>[]> {
         const models = await this.model.find()
         return models.map(it => DocumentModel.convert<T>(it.toObject()))
     }
@@ -53,6 +53,7 @@ export class DocumentModel<T extends Object> {
 
         for (const key in dbObject) {
             if (!(key in object)) {
+                // @ts-ignore
                 object[key] = dbObject[key]
             }
         }
