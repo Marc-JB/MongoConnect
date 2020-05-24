@@ -1,4 +1,5 @@
 import mongoose from "mongoose"
+import { tryFunction } from "./asyncUtils"
 
 class Model<T> {
     public constructor(private readonly model: mongoose.Model<mongoose.Document & T, {}>) {}
@@ -75,8 +76,12 @@ export class MongoDB {
         return new Model<T>(mongoModel)
     }
 
-    public static async connect(url: string, useNewUrlParser = true, useUnifiedTopology = true): Promise<MongoDB> {
+    public static async connectOnce(url: string, useNewUrlParser = true, useUnifiedTopology = true): Promise<MongoDB> {
         const connection = await mongoose.connect(url, { useNewUrlParser, useUnifiedTopology })
         return new MongoDB(connection)
+    }
+
+    public static async connect(url: string, maxNumOfTries = 10): Promise<MongoDB> {
+        return tryFunction(async () => this.connectOnce(url), maxNumOfTries)
     }
 }
