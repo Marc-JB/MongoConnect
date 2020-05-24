@@ -1,6 +1,8 @@
 import mongoose from "mongoose"
-import { Model } from "./Model"
+import { DocumentModel } from "./DocumentModel"
 import { tryFunction } from "./asyncUtils"
+
+export type Model<T> = DocumentModel<T>
 
 export type SchemaDefinition = mongoose.SchemaDefinition
 
@@ -53,7 +55,7 @@ export class MongoDB {
     public getModel<T extends Object>(name: string, schema: SchemaDefinition): Model<T> {
         const mongoModel = this.connection.model<mongoose.Document & T>(name, new mongoose.Schema(schema))
 
-        return new Model<T>(mongoModel)
+        return new DocumentModel<T>(mongoModel)
     }
 
     public static async connectOnce(url: string, useNewUrlParser = true, useUnifiedTopology = true): Promise<MongoDB> {

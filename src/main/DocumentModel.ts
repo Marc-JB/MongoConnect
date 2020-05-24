@@ -4,7 +4,7 @@ export type WithId<T> = T & { id: string }
 
 export type MongoObject<T> = T & { _id: string; __v?: any }
 
-export class Model<T extends Object> {
+export class DocumentModel<T extends Object> {
     public constructor(private readonly model: mongoose.Model<mongoose.Document & T, {}>) {}
 
     private static convert<T>(object: MongoObject<T>): WithId<T> {
@@ -14,17 +14,17 @@ export class Model<T extends Object> {
 
     public async getById(id: string): Promise<T | null> {
         const model = await this.model.findById(id)
-        return model === null ? null : Model.convert<T>(model.toObject())
+        return model === null ? null : DocumentModel.convert<T>(model.toObject())
     }
 
     public async getAll(): Promise<T[]> {
         const models = await this.model.find()
-        return models.map(it => Model.convert<T>(it.toObject()))
+        return models.map(it => DocumentModel.convert<T>(it.toObject()))
     }
 
     public async add(object: T): Promise<WithId<T>> {
         const model = await new this.model(object).save()
-        return Model.convert<T>(model.toObject())
+        return DocumentModel.convert<T>(model.toObject())
     }
 
     public async insert(object: T): Promise<WithId<T>> {
@@ -38,12 +38,12 @@ export class Model<T extends Object> {
 
     public async addWithId(id: string, object: T): Promise<WithId<T>> {
         const model = await new this.model({ _id: id, ...object }).save()
-        return Model.convert<T>(model.toObject())
+        return DocumentModel.convert<T>(model.toObject())
     }
 
     public async update(id: string, object: T): Promise<WithId<T> | null> {
         const model = await this.model.findByIdAndUpdate(id, object as unknown as any)
-        return model === null ? null : Model.convert<T>(model.toObject())
+        return model === null ? null : DocumentModel.convert<T>(model.toObject())
     }
 
     public async patch(id: string, object: Partial<T>): Promise<WithId<T> | null> {
@@ -58,12 +58,12 @@ export class Model<T extends Object> {
         }
 
         const model = await this.model.findByIdAndUpdate(id, object as unknown as any)
-        return model === null ? null : Model.convert<T>(model.toObject())
+        return model === null ? null : DocumentModel.convert<T>(model.toObject())
     }
 
     public async delete(id: string): Promise<WithId<T> | null> {
         const model = await this.model.findByIdAndDelete(id)
-        return model === null ? null : Model.convert<T>(model.toObject())
+        return model === null ? null : DocumentModel.convert<T>(model.toObject())
     }
 
     public async remove(id: string): Promise<WithId<T> | null> {
