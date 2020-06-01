@@ -58,12 +58,12 @@ export class MongoDB {
         return new DocumentModel<T>(mongoModel)
     }
 
-    public static async connectOnce(url: string, useNewUrlParser = true, useUnifiedTopology = true): Promise<MongoDB> {
+    public static async connectOnce(url = "mongodb://localhost:27017", useNewUrlParser = true, useUnifiedTopology = true): Promise<MongoDB> {
         const connection = await mongoose.connect(url, { useNewUrlParser, useUnifiedTopology })
         return new MongoDB(connection)
     }
 
-    public static async connect(url: string, maxNumOfTries = 10): Promise<MongoDB> {
+    public static async connect(url = "mongodb://localhost:27017", maxNumOfTries = 10): Promise<MongoDB> {
         return tryFunction(async () => this.connectOnce(url), maxNumOfTries)
     }
 }
