@@ -65,6 +65,7 @@ typings/
 
 # Code not used for the exported library
 src/
+.vscode/
 .github/
 *.code-workspace
 tsconfig-base.json
