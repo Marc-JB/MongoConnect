@@ -1,4 +1,4 @@
-# Mongo Connect [![Node.js CI](https://github.com/Marc-JB/MongoConnect/workflows/Node.js%20CI/badge.svg)](https://github.com/Marc-JB/MongoConnect/actions?query=workflow%3A%22Node.js+CI%22) [![license](https://badgen.net/github/license/Marc-JB/MongoConnect?color=cyan)](https://github.com/Marc-JB/MongoConnect/blob/master/LICENSE)
+# Mongo Connect [![Node.js CI](https://github.com/Marc-JB/MongoConnect/workflows/Node.js%20CI/badge.svg)](https://github.com/Marc-JB/MongoConnect/actions?query=workflow%3A%22Node.js+CI%22) [![license](https://badgen.net/github/license/Marc-JB/MongoConnect?color=cyan)](https://github.com/Marc-JB/MongoConnect/blob/master/LICENSE) [![npm](https://badgen.net/badge/icon/npm?icon=npm&color=cyan&label)](https://www.npmjs.com/package/@peregrine/mongo-connect) ![node version](https://badgen.net/npm/node/@peregrine/mongo-connect) ![types](https://badgen.net/npm/types/@peregrine/mongo-connect?icon=typescript)
 Very simple and minimal mongoose wrapper.
 
 ## Notes
