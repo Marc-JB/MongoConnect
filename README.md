@@ -7,7 +7,7 @@ Very simple and minimal mongoose wrapper.
 
 ## Demo
 ```TypeScript
-import { MongoDB, Model, required } from "@peregrine/mongo-connect"
+import { MongoDB, MutableRepository, required } from "@peregrine/mongo-connect"
 
 type Nullable<T> = T | null
 
@@ -22,18 +22,16 @@ interface PetWithId extends Pet {
 }
 
 const db = await MongoDB.connect(process.env.MONGO_URL)
-const pets: Model<Pet> = db.getModel<Pet>("pets", {
+const pets: MutableRepository<Pet> = db.getMutableRepository<Pet>("pets", {
     name: required(String),
     kind: required(String),
     dateOfBirth: Date
 })
 
-const maya: Pet = {
+const maya: PetWithId = await pets.add({
     name: "Maya",
     kind: "Parrot"
-}
-
-const databaseMaya: PetWithId = await pets.add(maya)
+})
 
 const updatedMaya: Nullable<PetWithId> = await pets.update(maya.id, {
     name: maya.name,

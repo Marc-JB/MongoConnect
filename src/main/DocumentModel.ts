@@ -1,13 +1,10 @@
-import mongoose from "mongoose"
+import { Model, Document } from "mongoose"
+import { Repository, MutableRepository, MongoObject, WithId } from "./Repository"
 
-export type WithId<T> = T & { id: string }
+export class DocumentModel<T extends Object> implements Repository<T> {
+    public constructor(protected readonly model: Model<Document & T, {}>) {}
 
-export type MongoObject<T> = T & { _id: string; __v?: any }
-
-export class DocumentModel<T extends Object> {
-    public constructor(private readonly model: mongoose.Model<mongoose.Document & T, {}>) {}
-
-    private static convert<T>(object: MongoObject<T>): WithId<T> {
+    protected static convert<T>(object: MongoObject<T>): WithId<T> {
         const { _id, __v, ...t } = object
         return { id: _id, ...(t as unknown as T) }
     }
@@ -20,6 +17,12 @@ export class DocumentModel<T extends Object> {
     public async getAll(): Promise<WithId<T>[]> {
         const models = await this.model.find()
         return models.map(it => DocumentModel.convert<T>(it.toObject()))
+    }
+}
+
+export class MutableDocumentModel<T extends Object> extends DocumentModel<T> implements MutableRepository<T> {
+    public constructor(model: Model<Document & T, {}>) {
+        super(model)
     }
 
     public async add(object: T): Promise<WithId<T>> {
@@ -58,8 +61,7 @@ export class DocumentModel<T extends Object> {
             }
         }
 
-        const model = await this.model.findByIdAndUpdate(id, object as unknown as any)
-        return model === null ? null : DocumentModel.convert<T>(model.toObject())
+        return this.update(id, object as unknown as T)
     }
 
     public async delete(id: string): Promise<WithId<T> | null> {
@@ -69,5 +71,9 @@ export class DocumentModel<T extends Object> {
 
     public async remove(id: string): Promise<WithId<T> | null> {
         return this.delete(id)
+    }
+
+    public get readonly(): Repository<T> {
+        return this
     }
 }
