@@ -65,7 +65,7 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 14.x
-          registry-url: 'https://peregrine:${{secrets.npm_token}}@registry.npmjs.org'
+          registry-url: 'https://peregrine:${{secrets.NPM_TOKEN}}@registry.npmjs.org'
           scope: '@peregrine'
 
       # Cache
@@ -90,12 +90,12 @@ jobs:
 
       # Publish
       - name: Change package registry
-        run: yarn config set registry https://peregrine:${{secrets.npm_token}}@registry.npmjs.org
+        run: yarn config set registry https://peregrine:${{secrets.NPM_TOKEN}}@registry.npmjs.org
 
       - name: Publish project to npm
         run: yarn publish --access public
         env:
-          NODE_AUTH_TOKEN: ${{secrets.npm_token}}
+          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
 
   publish-gpr:
     needs: lint-and-test
