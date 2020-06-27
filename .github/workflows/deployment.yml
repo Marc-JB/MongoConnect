@@ -65,6 +65,8 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 14.x
+          registry-url: 'https://peregrine:${{secrets.NPM_TOKEN}}@registry.npmjs.org'
+          scope: '@peregrine'
 
       # Cache
       - name: Get yarn cache directory path
@@ -87,10 +89,13 @@ jobs:
         run: yarn build
 
       # Publish
+      - name: Change package registry
+        run: yarn config set registry https://peregrine:${{secrets.NPM_TOKEN}}@registry.npmjs.org
+
       - name: Publish project to npm
         run: yarn publish --access public
         env:
-          NODE_AUTH_TOKEN: ${{secrets.npm_token}}
+          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
 
   publish-gpr:
     needs: lint-and-test
@@ -107,6 +112,7 @@ jobs:
         with:
           node-version: 14.x
           registry-url: https://marc-jb:${{secrets.GITHUB_TOKEN}}@npm.pkg.github.com/
+          scope: 'marc-jb'
 
       # Cache
       - name: Get yarn cache directory path
@@ -131,9 +137,6 @@ jobs:
       # Publish
       - name: Change package registry
         run: yarn config set registry https://marc-jb:${{secrets.GITHUB_TOKEN}}@npm.pkg.github.com/
-
-      - name: Apply changes specific to GitHub Packages
-        run: git apply ./github-package-registry.patch
 
       - name: Publish project to GitHub Packages
         run: yarn publish --access public
