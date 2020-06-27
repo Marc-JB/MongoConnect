@@ -88,7 +88,7 @@ jobs:
 
       # Publish
       - name: Publish project to npm
-        run: npm publish --access public
+        run: yarn publish --access public
         env:
           NODE_AUTH_TOKEN: ${{secrets.npm_token}}
 
@@ -130,12 +130,12 @@ jobs:
 
       # Publish
       - name: Change package registry
-        run: npm config set registry https://marc-jb:${{secrets.GITHUB_TOKEN}}@npm.pkg.github.com/
+        run: yarn config set registry https://marc-jb:${{secrets.GITHUB_TOKEN}}@npm.pkg.github.com/
 
       - name: Apply changes specific to GitHub Packages
         run: git apply ./github-package-registry.patch
 
       - name: Publish project to GitHub Packages
-        run: npm publish --access public
+        run: yarn publish --access public
         env:
           NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
