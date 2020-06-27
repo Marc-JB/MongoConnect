@@ -14,14 +14,25 @@ export type SchemaType =
     typeof Boolean |
     typeof Map
 
-export function required(type: SchemaType): { type: SchemaType; required: true } {
+export function reference<B extends boolean, S extends string>(
+    tableName: S,
+    isRequired: B
+): { type: typeof Types.ID; ref: S; required: B } {
+    return {
+        type: Types.ID,
+        ref: tableName,
+        required: isRequired
+    }
+}
+
+export function required<T extends SchemaType>(type: T): { type: T; required: true } {
     return {
         type,
         required: true
     }
 }
 
-export function optional(type: SchemaType): { type: SchemaType; required: false } {
+export function optional<T extends SchemaType>(type: T): { type: T; required: false } {
     return {
         type,
         required: false
