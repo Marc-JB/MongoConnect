@@ -1,0 +1,16 @@
+/*
+  This is a "Solution Style" tsconfig.json file, and is used by editors and TypeScript’s language server to improve development experience.
+  It is not intended to be used to perform a compilation.
+*/
+{
+    "extends": "./tsconfig.base.json",
+    "files": [],
+    "references": [
+        {
+            "path": "./src/main/"
+        },
+        {
+            "path": "./src/test/"
+        }
+    ]
+}
