@@ -1,5 +1,5 @@
 {
-    "name": "@peregrine/mongo-connect",
+    "name": "mongo-connect",
     "private": false,
     "version": "0.2.2",
     "description": "Experimental MongoDB lib for node",
