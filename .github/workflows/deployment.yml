@@ -67,6 +67,7 @@ jobs:
           node-version: 14.x
           registry-url: 'https://marc-b:${{secrets.NPM_TOKEN}}@registry.npmjs.org'
           scope: '@peregrine'
+          always-auth: true
 
       # Cache
       - name: Get yarn cache directory path
@@ -89,6 +90,9 @@ jobs:
         run: yarn build
 
       # Publish
+      - name: Change scope
+        run: yarn config set scope "@peregrine"
+
       - name: Change package registry
         run: yarn config set registry https://marc-b:${{secrets.NPM_TOKEN}}@registry.npmjs.org
 
@@ -113,6 +117,7 @@ jobs:
           node-version: 14.x
           registry-url: https://marc-jb:${{secrets.GITHUB_TOKEN}}@npm.pkg.github.com/
           scope: 'marc-jb'
+          always-auth: true
 
       # Cache
       - name: Get yarn cache directory path
@@ -135,6 +140,9 @@ jobs:
         run: yarn build
 
       # Publish
+      - name: Change scope
+        run: yarn config set scope "@marc-jb"
+
       - name: Change package registry
         run: yarn config set registry https://marc-jb:${{secrets.GITHUB_TOKEN}}@npm.pkg.github.com/
 
