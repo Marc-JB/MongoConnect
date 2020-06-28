@@ -65,7 +65,7 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 14.x
-          registry-url: 'https://marc-b:${{secrets.NPM_TOKEN}}@registry.npmjs.org'
+          registry-url: 'https://registry.npmjs.org'
           scope: '@peregrine'
           always-auth: true
 
@@ -91,10 +91,8 @@ jobs:
 
       # Publish
       - name: Change scope
-        run: yarn config set scope "@peregrine"
-
-      - name: Change package registry
-        run: yarn config set registry https://marc-b:${{secrets.NPM_TOKEN}}@registry.npmjs.org
+        run: |
+          cat package.json | sed -i -e 's/"name": "\([a-z0-9-]*\)"/"name": "@peregrine\/\1"/' package.json
 
       - name: Publish project to npm
         run: yarn publish --access public
@@ -115,7 +113,7 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 14.x
-          registry-url: https://marc-jb:${{secrets.GITHUB_TOKEN}}@npm.pkg.github.com/
+          registry-url: 'https://npm.pkg.github.com/'
           scope: 'marc-jb'
           always-auth: true
 
@@ -141,10 +139,8 @@ jobs:
 
       # Publish
       - name: Change scope
-        run: yarn config set scope "@marc-jb"
-
-      - name: Change package registry
-        run: yarn config set registry https://marc-jb:${{secrets.GITHUB_TOKEN}}@npm.pkg.github.com/
+        run: |
+          cat package.json | sed -i -e 's/"name": "\([a-z0-9-]*\)"/"name": "@marc-jb\/\1"/' package.json
 
       - name: Publish project to GitHub Packages
         run: yarn publish --access public
