@@ -91,7 +91,8 @@ jobs:
 
       # Publish
       - name: Change scope
-        run: cat package.json | sed -i -e 's/"name": "\([a-z0-9-]*\)"/"name": "@peregrine\/\1"/' package.json
+        run: |
+          cat package.json | sed -i -e 's/"name": "\([a-z0-9-]*\)"/"name": "@peregrine\/\1"/' package.json
 
       - name: Publish project to npm
         run: yarn publish --verbose --access public
@@ -138,7 +139,8 @@ jobs:
 
       # Publish
       - name: Change scope
-        run: cat package.json | sed -i -e 's/"name": "\([a-z0-9-]*\)"/"name": "@marc-jb\/\1"/' package.json
+        run: |
+          cat package.json | sed -i -e 's/"name": "\([a-z0-9-]*\)"/"name": "@marc-jb\/\1"/' package.json
 
       - name: Publish project to GitHub Packages
         run: yarn publish --verbose --access public
