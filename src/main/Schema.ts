@@ -39,6 +39,7 @@ export function optional<T extends SchemaType>(type: T): { type: T; required: fa
     }
 }
 
+/* eslint-disable @typescript-eslint/naming-convention */
 export const Types = {
     ID: SchemaTypes.ObjectId as SchemaType,
     DocumentArray: SchemaTypes.DocumentArray as SchemaType,

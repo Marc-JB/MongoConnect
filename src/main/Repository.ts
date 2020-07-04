@@ -1,5 +1,6 @@
 export type WithId<T> = T & { id: string }
 
+// eslint-disable-next-line @typescript-eslint/naming-convention
 export type MongoObject<T> = T & { _id: string; __v?: any }
 
 export interface Repository<T extends Object, E = never> {

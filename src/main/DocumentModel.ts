@@ -5,6 +5,7 @@ export class DocumentModel<T extends Object> implements Repository<T> {
     public constructor(protected readonly model: Model<Document & T, {}>) {}
 
     protected static convert<T>(object: MongoObject<T>): WithId<T> {
+        // eslint-disable-next-line @typescript-eslint/naming-convention
         const { _id, __v, ...t } = object
         return { id: _id, ...(t as unknown as T) }
     }
