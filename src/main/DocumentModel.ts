@@ -1,4 +1,4 @@
-import mongoose, { Model, Document, FilterQuery, QueryFindOptions } from "mongoose"
+import { Model, Document, FilterQuery } from "mongoose"
 import { Repository, MutableRepository, MongoObject, WithId } from "./Repository"
 
 export interface Options<Model extends Object> {
@@ -62,7 +62,10 @@ export class DocumentModel<T extends Object> implements Repository<T> {
     }
 
     public async getDistinct(key: (keyof T) & string, options: Options<T> | null = null): Promise<WithId<T>[]> {
-        const models = await this.model.distinct(key, options)
+        const models = await (options === null ? 
+            this.model.distinct(key) : 
+            this.model.distinct(key, options)
+        )
         return models.map(it => DocumentModel.convert<T>(it.toObject()))
     }
 }
