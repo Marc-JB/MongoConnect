@@ -19,19 +19,19 @@ export class DocumentModel<T extends Object> implements Repository<T> {
     }
 
     public async getEstimatedLength(): Promise<number> {
-        return await this.model.estimatedDocumentCount()
+        return this.model.estimatedDocumentCount()
     }
 
     public async getEstimatedSize(): Promise<number> {
-        return await this.model.estimatedDocumentCount()
+        return this.model.estimatedDocumentCount()
     }
 
     public async getExactLength(filter: FilterQuery<T> | null = null): Promise<number> {
-        return await (filter === null ? this.model.countDocuments() : this.model.countDocuments(filter as FilterQuery<T & Document>))
+        return filter === null ? this.model.countDocuments() : this.model.countDocuments(filter as FilterQuery<T & Document>)
     }
 
     public async getExactSize(filter: FilterQuery<T> | null = null): Promise<number> {
-        return await (filter === null ? this.model.countDocuments() : this.model.countDocuments(filter as FilterQuery<T & Document>))
+        return filter === null ? this.model.countDocuments() : this.model.countDocuments(filter as FilterQuery<T & Document>)
     }
 
     public async getById(id: string): Promise<WithId<T> | null> {
@@ -45,7 +45,7 @@ export class DocumentModel<T extends Object> implements Repository<T> {
     }
 
     public async exists(filter: FilterQuery<T>): Promise<boolean> {
-        return await this.model.exists(filter as FilterQuery<T & Document>)
+        return this.model.exists(filter as FilterQuery<T & Document>)
     }
 
     public async firstOrNull(filter: FilterQuery<T>): Promise<WithId<T> | null> {
