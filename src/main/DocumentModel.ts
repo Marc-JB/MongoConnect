@@ -1,5 +1,13 @@
-import { Model, Document } from "mongoose"
+import mongoose, { Model, Document, FilterQuery, QueryFindOptions } from "mongoose"
 import { Repository, MutableRepository, MongoObject, WithId } from "./Repository"
+
+export interface Options<Model extends Object> {
+    limit: number
+    skip: number
+    sort: {
+        [P in keyof Model]: 1 | -1 | "asc" | "desc" | "ascending" | "descending"
+    }
+}
 
 export class DocumentModel<T extends Object> implements Repository<T> {
     public constructor(protected readonly model: Model<Document & T, {}>) {}
@@ -10,6 +18,22 @@ export class DocumentModel<T extends Object> implements Repository<T> {
         return { id: _id, ...(t as unknown as T) }
     }
 
+    public async getEstimatedLength(): Promise<number> {
+        return await this.model.estimatedDocumentCount()
+    }
+
+    public async getEstimatedSize(): Promise<number> {
+        return await this.model.estimatedDocumentCount()
+    }
+
+    public async getExactLength(filter: FilterQuery<T> | null = null): Promise<number> {
+        return await (filter === null ? this.model.countDocuments() : this.model.countDocuments(filter as FilterQuery<T & Document>))
+    }
+
+    public async getExactSize(filter: FilterQuery<T> | null = null): Promise<number> {
+        return await (filter === null ? this.model.countDocuments() : this.model.countDocuments(filter as FilterQuery<T & Document>))
+    }
+
     public async getById(id: string): Promise<WithId<T> | null> {
         const model = await this.model.findById(id)
         return model === null ? null : DocumentModel.convert<T>(model.toObject())
@@ -17,6 +41,28 @@ export class DocumentModel<T extends Object> implements Repository<T> {
 
     public async getAll(): Promise<WithId<T>[]> {
         const models = await this.model.find()
+        return models.map(it => DocumentModel.convert<T>(it.toObject()))
+    }
+
+    public async exists(filter: FilterQuery<T>): Promise<boolean> {
+        return await this.model.exists(filter as FilterQuery<T & Document>)
+    }
+
+    public async firstOrNull(filter: FilterQuery<T>): Promise<WithId<T> | null> {
+        const model = await this.model.findOne(filter as FilterQuery<T & Document>)
+        return model === null ? null : DocumentModel.convert<T>(model.toObject())
+    }
+
+    public async filter(filter: FilterQuery<T>, options: Options<T> | null = null): Promise<WithId<T>[]> {
+        const models = await (options === null ? 
+            this.model.find(filter as FilterQuery<T & Document>) : 
+            this.model.find(filter as FilterQuery<T & Document>, undefined, options)
+        )
+        return models.map(it => DocumentModel.convert<T>(it.toObject()))
+    }
+
+    public async getDistinct(key: (keyof T) & string, options: Options<T> | null = null): Promise<WithId<T>[]> {
+        const models = await this.model.distinct(key, options)
         return models.map(it => DocumentModel.convert<T>(it.toObject()))
     }
 }
