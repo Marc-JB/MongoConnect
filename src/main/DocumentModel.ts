@@ -224,8 +224,15 @@ export class MutableDocumentModel<T extends Object> extends DocumentModel<T> imp
         return this.delete(id)
     }
 
-    public async custom<R>(block: (model: Model<Document & T, {}>) => Promise<R>): Promise<R> {
-        return block(this.model)
+    public async custom<R, E>(block: (model: Model<Document & T, {}>) => Promise<R>, onError: E): Promise<R | E> {
+        try {
+            return await block(this.model)
+        } catch (error) {
+            if (error instanceof Error && !this.errorHandler(error))
+                throw error
+
+            return onError
+        }
     }
 
     public get readonly(): Repository<T> {
