@@ -1,9 +1,13 @@
-import { Mongoose, Document, Schema, connect, SchemaDefinition, Model, ConnectionOptions } from "mongoose"
+import { Mongoose, Document, Schema, connect, Model, ConnectionOptions, SchemaTypeOpts, SchemaType } from "mongoose"
 import { DocumentModel, MutableDocumentModel } from "./DocumentModel"
 import { tryFunction } from "./asyncUtils"
 import { Repository, MutableRepository } from "./Repository"
 
 export type ConnectOptions = ConnectionOptions
+
+export type MongoSchema<T extends Object> = {
+    [P in keyof T]: SchemaTypeOpts<any> | Schema | SchemaType
+}
 
 const defaultConnectOptions: ConnectOptions = {
     useNewUrlParser: true,
@@ -13,7 +17,7 @@ const defaultConnectOptions: ConnectOptions = {
 export class MongoDB {
     private constructor(private readonly connection = new Mongoose()) {}
 
-    private getMongoModel<T extends Object>(name: string, schema: SchemaDefinition): Model<Document & T> {
+    private getMongoModel<T extends Object>(name: string, schema: MongoSchema<T>): Model<Document & T> {
         return this.connection.model<Document & T>(name, new Schema(schema))
     }
 
@@ -25,7 +29,7 @@ export class MongoDB {
      */
     public getRepository<T extends Object>(
         name: string, 
-        schema: SchemaDefinition, 
+        schema: MongoSchema<T>, 
         errorHandler: (error: Error) => boolean = (): boolean => true
     ): Repository<T> {
         return new DocumentModel<T>(this.getMongoModel(name, schema), errorHandler)
@@ -39,7 +43,7 @@ export class MongoDB {
      */
     public getMutableRepository<T extends Object>(
         name: string, 
-        schema: SchemaDefinition, 
+        schema: MongoSchema<T>, 
         errorHandler: (error: Error) => boolean = (): boolean => true
     ): MutableRepository<T> {
         return new MutableDocumentModel<T>(this.getMongoModel(name, schema), errorHandler)
@@ -48,14 +52,14 @@ export class MongoDB {
     /** 
      * @deprecated switch to getRepository
      */
-    public getNullableRepository<T extends Object>(name: string, schema: SchemaDefinition): Repository<T> {
+    public getNullableRepository<T extends Object>(name: string, schema: MongoSchema<T>): Repository<T> {
         return this.getRepository(name, schema)
     }
 
     /** 
      * @deprecated switch to getMutableRepository
      */
-    public getMutableNullableRepository<T extends Object>(name: string, schema: SchemaDefinition): MutableRepository<T> {
+    public getMutableNullableRepository<T extends Object>(name: string, schema: MongoSchema<T>): MutableRepository<T> {
         return this.getMutableRepository(name, schema)
     }
 
