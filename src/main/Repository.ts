@@ -15,7 +15,7 @@ export type WithId<T> = T & { id: string }
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export type MongoObject<T> = T & { _id: string; __v?: any }
 
-export interface Repository<T extends Object, DeprecatedType = never> {
+export interface Repository<T extends Object> {
     errorHandler: (error: Error) => boolean
 
     getEstimatedLength(): Promise<number>
@@ -60,6 +60,6 @@ interface DeleteableRepository<T extends Object> extends Repository<T> {
     remove(id: string): Promise<WithId<T> | null>
 }
 
-export interface MutableRepository<T extends Object, DeprecatedType = never> extends InsertableRepository<T>, UpdateableRepository<T>, DeleteableRepository<T> {
+export interface MutableRepository<T extends Object> extends InsertableRepository<T>, UpdateableRepository<T>, DeleteableRepository<T> {
     readonly: Repository<T>
 }
