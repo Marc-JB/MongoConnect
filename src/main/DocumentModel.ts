@@ -12,6 +12,20 @@ export class DocumentModel<T extends Object> implements Repository<T> {
     protected static convert<T>(object: MongoObject<T>): WithId<T> {
         // eslint-disable-next-line @typescript-eslint/naming-convention
         const { _id, __v, ...t } = object
+        for (const prop in t) {
+            const value = (t as {[key: string]: any})[prop]
+            if (value !== undefined && value !== null && typeof value === "object") {
+                if (Array.isArray(value)) {
+                    if (value.every(it => {
+                        return it !== undefined && it !== null && typeof it === "object" && !Array.isArray(it) && "_id" in it
+                    })) {
+                        (t as {[key: string]: any})[prop] = value.map(it => this.convert(it))
+                    }
+                } else if ("_id" in value) {
+                    (t as {[key: string]: any})[prop] = this.convert(value)
+                }
+            }
+        }
         return { id: _id, ...(t as unknown as T) }
     }
 
@@ -224,9 +238,27 @@ export class MutableDocumentModel<T extends Object> extends DocumentModel<T> imp
         return this.delete(id)
     }
 
-    public async custom<R, E>(block: (model: Model<Document & T, {}>) => Promise<R>, onError: E): Promise<R | E> {
+    public async custom<R, E>(
+        block: (model: Model<Document & T, {}>) => Promise<Partial<R & Document> | Partial<R & Document>[] | null>, 
+        onError: E
+    ): Promise<Partial<WithId<R>> | Partial<WithId<R>>[] | E> {
         try {
-            return await block(this.model)
+            const returned = await block(this.model)
+            if (returned !== null && typeof returned === "object") {
+                if (Array.isArray(returned)) {
+                    if (returned.every(it => {
+                        return typeof it === "object" && !Array.isArray(it) && "_id" in it
+                    })) {
+                        return returned.map(it => DocumentModel.convert<R>(it.toObject?.()))
+                    } else {
+                        return returned
+                    }
+                } else {
+                    const obj = returned.toObject?.()
+                    return "_id" in obj ? DocumentModel.convert<R>(obj) : obj
+                }
+            }
+            return onError
         } catch (error) {
             if (error instanceof Error && !this.errorHandler(error))
                 throw error

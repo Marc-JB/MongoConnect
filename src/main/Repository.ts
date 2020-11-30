@@ -78,7 +78,10 @@ export interface MutableRepository<T extends Object> extends InsertableRepositor
      * }
      * ```
      */
-    custom<R, E>(block: (model: Model<Document & T, {}>) => Promise<R>, onError: E): Promise<R | E>
+    custom<R, E>(
+        block: (model: Model<Document & T, {}>) => Promise<Partial<R & Document> | Partial<R & Document>[] | null>, 
+        onError: E
+    ): Promise<Partial<WithId<R>> | Partial<WithId<R>>[] | E>
     
     readonly: Repository<T>
 }
