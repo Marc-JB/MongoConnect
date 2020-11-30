@@ -1,4 +1,4 @@
-import { FilterQuery } from "mongoose"
+import { FilterQuery, Model, Document } from "mongoose"
 
 export type Filter<T> = FilterQuery<T>
 
@@ -61,5 +61,7 @@ interface DeleteableRepository<T extends Object> extends Repository<T> {
 }
 
 export interface MutableRepository<T extends Object> extends InsertableRepository<T>, UpdateableRepository<T>, DeleteableRepository<T> {
+    custom<R>(block: (model: Model<Document & T, {}>) => Promise<R>): Promise<R>
+    
     readonly: Repository<T>
 }
