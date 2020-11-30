@@ -17,11 +17,11 @@ export class DocumentModel<T extends Object> implements Repository<T> {
             if (value !== undefined && value !== null && typeof value === "object") {
                 if (Array.isArray(value)) {
                     if (value.every(it => {
-                        return it !== undefined && it !== null && typeof it === "object" && !Array.isArray(it) && "_id" in it
+                        return it !== undefined && it !== null && typeof it === "object" && !Array.isArray(it) && "_id" in it && ("__v" in it || !("_bsontype" in it))
                     })) {
                         (t as {[key: string]: any})[prop] = value.map(it => this.convert(it))
                     }
-                } else if ("_id" in value) {
+                } else if ("_id" in value && ("__v" in value || !("_bsontype" in value))) {
                     (t as {[key: string]: any})[prop] = this.convert(value)
                 }
             }
@@ -247,7 +247,7 @@ export class MutableDocumentModel<T extends Object> extends DocumentModel<T> imp
             if (returned !== null && typeof returned === "object") {
                 if (Array.isArray(returned)) {
                     if (returned.every(it => {
-                        return typeof it === "object" && !Array.isArray(it) && "_id" in it
+                        return typeof it === "object" && !Array.isArray(it) && "_id" in it && ("__v" in it || !("_bsontype" in it))
                     })) {
                         return returned.map(it => DocumentModel.convert<R>(it.toObject?.()))
                     } else {
@@ -255,7 +255,7 @@ export class MutableDocumentModel<T extends Object> extends DocumentModel<T> imp
                     }
                 } else {
                     const obj = returned.toObject?.()
-                    return "_id" in obj ? DocumentModel.convert<R>(obj) : obj
+                    return "_id" in obj && ("__v" in obj || !("_bsontype" in obj)) ? DocumentModel.convert<R>(obj) : returned
                 }
             }
             return onError
