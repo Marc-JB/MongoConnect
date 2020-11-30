@@ -61,6 +61,22 @@ interface DeleteableRepository<T extends Object> extends Repository<T> {
 }
 
 export interface MutableRepository<T extends Object> extends InsertableRepository<T>, UpdateableRepository<T>, DeleteableRepository<T> {
+    /**
+     * Exposes the Model object of mongoose.
+     * @param block use the Model of mongoose. Must return a promise.
+     * @example
+     * ```typescript
+     * async function printAllMacaws(birds: MutableRepository<Bird>): Promise<void> {
+     *     const macaws = await birds.custom(async (model) => {
+     *          return await this.model.find({ kind: "macaw" }, "name")
+     *     })
+     * 
+     *     for(const macaw of macaws) {
+     *          console.log(macaw.name)
+     *     }
+     * }
+     * ```
+     */
     custom<R>(block: (model: Model<Document & T, {}>) => Promise<R>): Promise<R>
     
     readonly: Repository<T>
