@@ -1,6 +1,6 @@
 {
     "name": "mongo-connect",
-    "version": "0.3.0",
+    "version": "0.3.1",
     "description": "Experimental MongoDB lib for node",
     "private": false,
     "type": "commonjs",
@@ -27,11 +27,11 @@
     },
     "homepage": "https://github.com/Marc-JB/MongoConnect#readme",
     "dependencies": {
-        "mongoose": "^5.10.18"
+        "mongoose": "^5.10.18",
+        "@types/mongoose": "^5.10.1"
     },
     "devDependencies": {
         "@peregrine/test-with-decorators": "^0.1.5",
-        "@types/mongoose": "^5.10.1",
         "@types/node": "^14.14.10",
         "@typescript-eslint/eslint-plugin": "^4.8.2",
         "@typescript-eslint/parser": "^4.8.2",

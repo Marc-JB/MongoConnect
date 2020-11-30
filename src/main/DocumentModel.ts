@@ -1,5 +1,7 @@
-import { Model, Document, FilterQuery } from "mongoose"
-import { Repository, MutableRepository, MongoObject, WithId, Options } from "./Repository"
+import { Model, Document } from "mongoose"
+import { Repository, MutableRepository, MongoObject, WithId, Options, Filter } from "./Repository"
+
+type DocumentFilter<T> = Filter<T & Document>
 
 export class DocumentModel<T extends Object> implements Repository<T> {
     public constructor(
@@ -28,11 +30,11 @@ export class DocumentModel<T extends Object> implements Repository<T> {
         return this.getEstimatedSize()
     }
 
-    public async getExactSize(filter: FilterQuery<T> | null = null): Promise<number> {
+    public async getExactSize(filter: Filter<T> | null = null): Promise<number> {
         try {
             return await (filter === null ? 
                 this.model.countDocuments() : 
-                this.model.countDocuments(filter as FilterQuery<T & Document>)
+                this.model.countDocuments(filter as DocumentFilter<T>)
             )
         } catch (error) {
             if (error instanceof Error && !this.errorHandler(error))
@@ -42,7 +44,7 @@ export class DocumentModel<T extends Object> implements Repository<T> {
         }
     }
 
-    public async getExactLength(filter: FilterQuery<T> | null = null): Promise<number> {
+    public async getExactLength(filter: Filter<T> | null = null): Promise<number> {
         return this.getExactSize(filter)
     }
 
@@ -70,9 +72,9 @@ export class DocumentModel<T extends Object> implements Repository<T> {
         }
     }
 
-    public async exists(filter: FilterQuery<T>): Promise<boolean> {
+    public async exists(filter: Filter<T>): Promise<boolean> {
         try {
-            return await this.model.exists(filter as FilterQuery<T & Document>)
+            return await this.model.exists(filter as DocumentFilter<T>)
         } catch (error) {
             if (error instanceof Error && !this.errorHandler(error))
                 throw error
@@ -81,9 +83,9 @@ export class DocumentModel<T extends Object> implements Repository<T> {
         }
     }
 
-    public async firstOrNull(filter: FilterQuery<T>): Promise<WithId<T> | null> {
+    public async firstOrNull(filter: Filter<T>): Promise<WithId<T> | null> {
         try {
-            const model = await this.model.findOne(filter as FilterQuery<T & Document>)
+            const model = await this.model.findOne(filter as DocumentFilter<T>)
             return model === null ? null : DocumentModel.convert<T>(model.toObject())
         } catch (error) {
             if (error instanceof Error && !this.errorHandler(error))
@@ -93,11 +95,11 @@ export class DocumentModel<T extends Object> implements Repository<T> {
         }
     }
 
-    public async filter(filter: FilterQuery<T>, options: Options<T> | null = null): Promise<WithId<T>[]> {
+    public async filter(filter: Filter<T>, options: Options<T> | null = null): Promise<WithId<T>[]> {
         try {
             const models = await (options === null ? 
-                this.model.find(filter as FilterQuery<T & Document>) : 
-                this.model.find(filter as FilterQuery<T & Document>, undefined, options)
+                this.model.find(filter as DocumentFilter<T>) : 
+                this.model.find(filter as DocumentFilter<T>, undefined, options)
             )
             return models.map(it => DocumentModel.convert<T>(it.toObject()))
         } catch (error) {
