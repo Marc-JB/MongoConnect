@@ -64,12 +64,13 @@ export interface MutableRepository<T extends Object> extends InsertableRepositor
     /**
      * Exposes the Model object of mongoose.
      * @param block use the Model of mongoose. Must return a promise.
+     * @param onError what to return when an error occurs which is not handled by the errorHandler.
      * @example
      * ```typescript
      * async function printAllMacaws(birds: MutableRepository<Bird>): Promise<void> {
      *     const macaws = await birds.custom(async (model) => {
      *          return await this.model.find({ kind: "macaw" }, "name")
-     *     })
+     *     }, [])
      * 
      *     for(const macaw of macaws) {
      *          console.log(macaw.name)
@@ -77,7 +78,7 @@ export interface MutableRepository<T extends Object> extends InsertableRepositor
      * }
      * ```
      */
-    custom<R>(block: (model: Model<Document & T, {}>) => Promise<R>): Promise<R>
+    custom<R, E>(block: (model: Model<Document & T, {}>) => Promise<R>, onError: E): Promise<R | E>
     
     readonly: Repository<T>
 }
