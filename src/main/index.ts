@@ -1,3 +1,3 @@
 export * from "./MongoDB"
-export * from "./Repository"
+export * from "./repositories/Repository"
 export * from "./Schema"

@@ -1,4 +1,5 @@
 import { FilterQuery, Model, Document } from "mongoose"
+import { DocumentQueryBuilder, DocumentsArrayQueryBuilder } from "../query_builders/QueryBuilderTypes"
 
 export type Filter<T> = FilterQuery<T>
 
@@ -29,8 +30,10 @@ export interface Repository<T extends Object> {
     getExactSize(filter: Filter<T>): Promise<number>
 
     getById(id: string): Promise<WithId<T> | null>
+    queryById(id: string): DocumentQueryBuilder<T>
 
     getAll(): Promise<WithId<T>[]>
+    queryAll(): DocumentsArrayQueryBuilder<T>
 
     exists(filter: Filter<T>): Promise<boolean>
 
