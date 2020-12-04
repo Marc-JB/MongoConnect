@@ -1,7 +1,8 @@
 import { Mongoose, Document, Schema, connect, Model, ConnectionOptions, SchemaTypeOpts, SchemaType } from "mongoose"
 import { DocumentModel } from "./repositories/DocumentModel"
 import { tryFunction } from "./utils/asyncUtils"
-import { Repository, MutableRepository } from "./repositories/Repository"
+import { Repository } from "./repositories/Repository"
+import { MutableRepository } from "./repositories/MutableRepository"
 import { MutableDocumentModel } from "./repositories/MutableDocumentModel"
 
 export type ConnectOptions = ConnectionOptions

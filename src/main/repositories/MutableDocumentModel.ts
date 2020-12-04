@@ -1,7 +1,8 @@
 import { Model, Document } from "mongoose"
 import { convert } from "../convert"
 import { DocumentModel } from "./DocumentModel"
-import { Repository, MutableRepository, WithId } from "./Repository"
+import { Repository, WithId } from "./Repository"
+import { MutableRepository } from "./MutableRepository"
 
 export class MutableDocumentModel<T extends Object> extends DocumentModel<T> implements MutableRepository<T> {
     public constructor(
