@@ -1,5 +1,5 @@
 import { suite, test, expect } from "@peregrine/test-with-decorators"
-import { tryFunction } from "../main/asyncUtils"
+import { tryFunction } from "../main/utils/asyncUtils"
 
 @suite
 export class AsyncUtilsTests {

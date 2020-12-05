@@ -1,7 +1,9 @@
 import { Mongoose, Document, Schema, connect, Model, ConnectionOptions, SchemaTypeOpts, SchemaType } from "mongoose"
-import { DocumentModel, MutableDocumentModel } from "./DocumentModel"
-import { tryFunction } from "./asyncUtils"
-import { Repository, MutableRepository } from "./Repository"
+import { DocumentModel } from "./repositories/DocumentModel"
+import { tryFunction } from "./utils/asyncUtils"
+import { Repository } from "./repositories/Repository"
+import { MutableRepository } from "./repositories/MutableRepository"
+import { MutableDocumentModel } from "./repositories/MutableDocumentModel"
 
 export type ConnectOptions = ConnectionOptions
 
@@ -47,20 +49,6 @@ export class MongoDB {
         errorHandler: (error: Error) => boolean = (): boolean => true
     ): MutableRepository<T> {
         return new MutableDocumentModel<T>(this.getMongoModel(name, schema), errorHandler)
-    }
-
-    /** 
-     * @deprecated switch to getRepository
-     */
-    public getNullableRepository<T extends Object>(name: string, schema: MongoSchema<T>): Repository<T> {
-        return this.getRepository(name, schema)
-    }
-
-    /** 
-     * @deprecated switch to getMutableRepository
-     */
-    public getMutableNullableRepository<T extends Object>(name: string, schema: MongoSchema<T>): MutableRepository<T> {
-        return this.getMutableRepository(name, schema)
     }
 
     /**

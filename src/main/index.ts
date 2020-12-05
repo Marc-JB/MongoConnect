@@ -1,3 +1,5 @@
 export * from "./MongoDB"
-export * from "./Repository"
+export * from "./repositories/Repository"
+export * from "./repositories/MutableRepository"
+export * from "./query_builders/QueryBuilderTypes"
 export * from "./Schema"
