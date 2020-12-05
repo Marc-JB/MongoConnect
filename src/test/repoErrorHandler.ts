@@ -7,8 +7,6 @@ export class RepoErrorHandlerTests {
     @test
     public async testErrorHandlerWhenNotInvoked(): Promise<void> {
         // Arrange
-        interface TestModel {}
-
         let handlerInvoked = 0
         const handler = (): boolean => {
             handlerInvoked++
@@ -19,9 +17,9 @@ export class RepoErrorHandlerTests {
 
         const model = {
             estimatedDocumentCount: async (): Promise<number> => Promise.resolve(expectedResult)
-        } as unknown as Model<Document & TestModel, {}>
+        } as unknown as Model<Document, {}>
 
-        const repo = new DocumentModel<TestModel>(model, handler)
+        const repo = new DocumentModel<{}>(model, handler)
 
         // Act
         const actualResult = await repo.getEstimatedSize()
@@ -34,8 +32,6 @@ export class RepoErrorHandlerTests {
     @test
     public async testErrorHandlerWithNoErrorThrowing(): Promise<void> {
         // Arrange
-        interface TestModel {}
-
         let handlerInvoked = 0
         let errorFromHandler: Error | null = null
         const handler = (error: Error): boolean => {
@@ -48,9 +44,9 @@ export class RepoErrorHandlerTests {
 
         const model = {
             estimatedDocumentCount: async (): Promise<number> => Promise.reject(error)
-        } as unknown as Model<Document & TestModel, {}>
+        } as unknown as Model<Document, {}>
 
-        const repo = new DocumentModel<TestModel>(model, handler)
+        const repo = new DocumentModel<{}>(model, handler)
 
         // Act
         let actualResult: number | null = null
@@ -71,8 +67,6 @@ export class RepoErrorHandlerTests {
     @test
     public async testErrorHandlerWithErrorThrowing(): Promise<void> {
         // Arrange
-        interface TestModel {}
-
         let handlerInvoked = 0
         let errorFromHandler: Error | null = null
         const handler = (error: Error): boolean => {
@@ -85,9 +79,9 @@ export class RepoErrorHandlerTests {
 
         const model = {
             estimatedDocumentCount: async (): Promise<number> => Promise.reject(error)
-        } as unknown as Model<Document & TestModel, {}>
+        } as unknown as Model<Document, {}>
 
-        const repo = new DocumentModel<TestModel>(model, handler)
+        const repo = new DocumentModel<{}>(model, handler)
 
         // Act
         let actualResult: number | null = null
