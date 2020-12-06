@@ -2,6 +2,7 @@ import { suite, test, expect } from "@peregrine/test-with-decorators"
 import mongoose from "mongoose"
 import { convert } from "../main/convert"
 import { MongoObject } from "../main/repositories/Repository"
+import { ObjectType } from "../main/utils/typeUtils"
 
 @suite
 export class ConvertTests {
@@ -23,7 +24,7 @@ export class ConvertTests {
         }
 
         // Act
-        const actualResult = convert(mongoObject as unknown as MongoObject<unknown>)
+        const actualResult = convert(mongoObject as unknown as MongoObject<ObjectType>)
 
         // Assert
         expect(actualResult).to.deep.equal(expectedResult)
@@ -54,7 +55,7 @@ export class ConvertTests {
         }
 
         // Act
-        const actualResult = convert(mongoObject as unknown as MongoObject<unknown>)
+        const actualResult = convert(mongoObject as unknown as MongoObject<ObjectType>)
 
         // Assert
         expect(actualResult).to.deep.equal(expectedResult)
@@ -89,7 +90,7 @@ export class ConvertTests {
         }
 
         // Act
-        const actualResult = convert(mongoObject as unknown as MongoObject<unknown>)
+        const actualResult = convert(mongoObject as unknown as MongoObject<ObjectType>)
 
         // Assert
         expect(actualResult).to.deep.equal(expectedResult)
@@ -120,7 +121,7 @@ export class ConvertTests {
         }
 
         // Act
-        const actualResult = convert(mongoObject as unknown as MongoObject<unknown>)
+        const actualResult = convert(mongoObject as unknown as MongoObject<ObjectType>)
 
         // Assert
         expect(actualResult).to.deep.equal(expectedResult)
