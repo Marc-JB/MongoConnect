@@ -6,7 +6,7 @@
 ![node version](https://badgen.net/npm/node/@peregrine/mongo-connect)
 ![types](https://badgen.net/npm/types/@peregrine/mongo-connect?icon=typescript)
 # Mongo Connect
-Very simple and minimal mongoose wrapper.
+Experimental MongoDB lib for node. Wraps the mongoose library.
 
 ## Notes
 * All objects internally have an `_id` field for the ID. Don't specify the primary ID in the Schema.
