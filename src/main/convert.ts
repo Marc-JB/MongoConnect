@@ -1,11 +1,12 @@
 import { MongoObject, WithId } from "./repositories/Repository"
+import { ObjectType } from "./utils/typeUtils"
 
 export function isReferencedObject(obj: any): boolean {
     return obj !== undefined && obj !== null && typeof obj === "object" && !Array.isArray(obj) 
         && "_id" in obj && ("__v" in obj || !("_bsontype" in obj))
 }
 
-export function convert<T extends Object>(object: MongoObject<T>): WithId<T> {
+export function convert<T extends ObjectType>(object: MongoObject<T>): WithId<T> {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     const { _id, __v, ...t } = object
     for (const prop in t) {

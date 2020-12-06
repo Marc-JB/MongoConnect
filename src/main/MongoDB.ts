@@ -4,11 +4,12 @@ import { tryFunction } from "./utils/asyncUtils"
 import { Repository } from "./repositories/Repository"
 import { MutableRepository } from "./repositories/MutableRepository"
 import { MutableDocumentModel } from "./repositories/MutableDocumentModel"
+import { ObjectType } from "./utils/typeUtils"
 
 export type ConnectOptions = ConnectionOptions
 
-export type MongoSchema<T extends Object> = {
-    [P in keyof T]: SchemaTypeOpts<any> | Schema | SchemaType
+export type MongoSchema<T extends ObjectType> = {
+    [K in keyof T]: SchemaTypeOpts<any> | Schema | SchemaType
 }
 
 const defaultConnectOptions: ConnectOptions = {
@@ -19,7 +20,7 @@ const defaultConnectOptions: ConnectOptions = {
 export class MongoDB {
     private constructor(private readonly connection = new Mongoose()) {}
 
-    private getMongoModel<T extends Object>(name: string, schema: MongoSchema<T>): Model<Document & T> {
+    private getMongoModel<T extends ObjectType>(name: string, schema: MongoSchema<T>): Model<Document & T> {
         return this.connection.model<Document & T>(name, new Schema(schema))
     }
 
@@ -29,7 +30,7 @@ export class MongoDB {
      * @param schema The schema for objects in this repository, like `{ name: required(String), birthdate: optional(Date) }`
      * @param errorHandler Specify a custom error handler. Return `false` to rethrow errors, return `true` to ignore errors.
      */
-    public getRepository<T extends Object>(
+    public getRepository<T extends ObjectType>(
         name: string, 
         schema: MongoSchema<T>, 
         errorHandler: (error: Error) => boolean = (): boolean => true
@@ -43,7 +44,7 @@ export class MongoDB {
      * @param schema The schema for objects in this repository, like `{ name: required(String), birthdate: optional(Date) }`
      * @param errorHandler Specify a custom error handler. Return `false` to rethrow errors, return `true` to ignore errors.
      */
-    public getMutableRepository<T extends Object>(
+    public getMutableRepository<T extends ObjectType>(
         name: string, 
         schema: MongoSchema<T>, 
         errorHandler: (error: Error) => boolean = (): boolean => true

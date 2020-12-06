@@ -1,24 +1,25 @@
 import { Model, Document } from "mongoose"
+import { ObjectType } from "../utils/typeUtils"
 import { Repository, WithId } from "./Repository"
 
-interface InsertableRepository<T extends Object> extends Repository<T> {
+interface InsertableRepository<T extends ObjectType> extends Repository<T> {
     add(object: T): Promise<WithId<T> | null>
     insert(object: T): Promise<WithId<T> | null>
     addObjectWithId(object: WithId<T>): Promise<WithId<T> | null>
     addWithId(id: string, object: T): Promise<WithId<T> | null>
 }
 
-interface UpdateableRepository<T extends Object> extends Repository<T> {
+interface UpdateableRepository<T extends ObjectType> extends Repository<T> {
     update(id: string, object: T): Promise<WithId<T> | null>
     patch(id: string, object: Partial<T>): Promise<WithId<T> | null>
 }
 
-interface DeleteableRepository<T extends Object> extends Repository<T> {
+interface DeleteableRepository<T extends ObjectType> extends Repository<T> {
     delete(id: string): Promise<WithId<T> | null>
     remove(id: string): Promise<WithId<T> | null>
 }
 
-export interface MutableRepository<T extends Object> extends InsertableRepository<T>, UpdateableRepository<T>, DeleteableRepository<T> {
+export interface MutableRepository<T extends ObjectType> extends InsertableRepository<T>, UpdateableRepository<T>, DeleteableRepository<T> {
     /**
      * Exposes the Model object of mongoose.
      * @param block use the Model of mongoose. Must return a promise.

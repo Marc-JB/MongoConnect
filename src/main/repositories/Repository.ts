@@ -1,22 +1,23 @@
 import { FilterQuery } from "mongoose"
 import { DocumentQueryBuilder, DocumentsArrayQueryBuilder } from "../query_builders/QueryBuilderTypes"
+import { ObjectType } from "../utils/typeUtils"
 
 export type Filter<T> = FilterQuery<T>
 
-export interface Options<Model extends Object> {
+export interface Options<T extends ObjectType> {
     limit: number
     skip: number
     sort: {
-        [P in keyof Model]: 1 | -1 | "asc" | "desc" | "ascending" | "descending"
+        [K in keyof T]: 1 | -1 | "asc" | "desc" | "ascending" | "descending"
     }
 }
 
-export type WithId<T> = T & { id: string }
+export type WithId<T extends ObjectType> = T & { id: string }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export type MongoObject<T> = T & { _id: string; __v?: any }
+export type MongoObject<T extends ObjectType> = T & { _id: string; __v?: any }
 
-export interface Repository<T extends Object> {
+export interface Repository<T extends ObjectType> {
     errorHandler: (error: Error) => boolean
 
     getEstimatedLength(): Promise<number>
@@ -53,6 +54,7 @@ export interface Repository<T extends Object> {
      * @param filter The filter
      */
     firstOrNull(filter: Filter<T>): Promise<WithId<T> | null>
+    queryFirstOrNull(filter: Filter<T>): DocumentQueryBuilder<T>
 
     /**
      * Returns all models that match the filter, or an empty array if none

@@ -3,11 +3,12 @@ import { convert } from "../convert"
 import { DocumentQueryBuilderImpl } from "../query_builders/DocumentQueryBuilderImpl"
 import { DocumentsArrayQueryBuilderImpl } from "../query_builders/DocumentsArrayQueryBuilderImpl"
 import { DocumentQueryBuilder, DocumentsArrayQueryBuilder } from "../query_builders/QueryBuilderTypes"
+import { ObjectType } from "../utils/typeUtils"
 import { Repository, WithId, Options, Filter } from "./Repository"
 
 type DocumentFilter<T> = Filter<T & Document>
 
-export class DocumentModel<T extends Object> implements Repository<T> {
+export class DocumentModel<T extends ObjectType> implements Repository<T> {
     public constructor(
         protected readonly model: Model<Document & T, {}>,
         public errorHandler: (error: Error) => boolean = (): boolean => true
@@ -99,6 +100,10 @@ export class DocumentModel<T extends Object> implements Repository<T> {
 
             return null
         }
+    }
+    
+    public queryFirstOrNull(filter: Filter<T>): DocumentQueryBuilder<T> {
+        return new DocumentQueryBuilderImpl(this.model.findOne(filter as DocumentFilter<T>), this.errorHandler)
     }
 
     public async filter(filter: Filter<T>, options: Options<T> | null = null): Promise<WithId<T>[]> {
