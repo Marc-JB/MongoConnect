@@ -8,7 +8,7 @@ export interface Options<T extends ObjectType> {
     limit: number
     skip: number
     sort: {
-        [K in keyof T]: 1 | -1 | "asc" | "desc" | "ascending" | "descending"
+        [K in keyof T]?: 1 | -1 | "asc" | "desc" | "ascending" | "descending"
     }
 }
 
