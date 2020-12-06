@@ -3,8 +3,9 @@ import { convert } from "../convert"
 import { DocumentModel } from "./DocumentModel"
 import { Repository, WithId } from "./Repository"
 import { MutableRepository } from "./MutableRepository"
+import { ObjectType } from "../utils/typeUtils"
 
-export class MutableDocumentModel<T extends Object> extends DocumentModel<T> implements MutableRepository<T> {
+export class MutableDocumentModel<T extends ObjectType> extends DocumentModel<T> implements MutableRepository<T> {
     public constructor(
         model: Model<Document & T, {}>,
         errorHandler: (error: Error) => boolean = (): boolean => true
