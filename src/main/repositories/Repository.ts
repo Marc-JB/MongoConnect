@@ -44,6 +44,13 @@ export interface Repository<T extends ObjectType> {
     queryAll(): DocumentsArrayQueryBuilder<T>
 
     /**
+     * Returns all models from the database, or an empty array if none
+     * @param options Additional options
+     */
+    getAll(options: Options<T>): Promise<WithId<T>[]>
+    queryAll(options: Options<T>): DocumentsArrayQueryBuilder<T>
+
+    /**
      * Returns true if a model matching the filter exists
      * @param filter The filter
      */

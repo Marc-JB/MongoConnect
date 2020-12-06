@@ -14,7 +14,7 @@ export function convert<T extends ObjectType>(object: MongoObject<T>): WithId<T>
         if (value !== undefined && value !== null && typeof value === "object") {
             if (Array.isArray(value)) {
                 if (value.every(it => isReferencedObject(it))) {
-                    (t as { [key: string]: any })[prop] = value.map(it => convert(it))
+                    (t as { [key: string]: any })[prop] = value.map(it => convert<any>(it))
                 }
             } else if (isReferencedObject(value)) {
                 (t as { [key: string]: any })[prop] = convert(value)

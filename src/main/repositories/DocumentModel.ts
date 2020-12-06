@@ -16,7 +16,7 @@ export class DocumentModel<T extends ObjectType> implements Repository<T> {
 
     public async getEstimatedSize(): Promise<number> {
         try {
-            return await this.model.estimatedDocumentCount()
+            return await Promise.resolve(this.model.estimatedDocumentCount())
         } catch (error) {
             if (error instanceof Error && !this.errorHandler(error))
                 throw error
@@ -31,7 +31,7 @@ export class DocumentModel<T extends ObjectType> implements Repository<T> {
 
     public async getExactSize(filter: Filter<T> | null = null): Promise<number> {
         try {
-            return await (filter === null ? 
+            return await Promise.resolve(filter === null ? 
                 this.model.countDocuments() : 
                 this.model.countDocuments(filter as DocumentFilter<T>)
             )
@@ -63,9 +63,9 @@ export class DocumentModel<T extends ObjectType> implements Repository<T> {
         return new DocumentQueryBuilderImpl(this.model.findById(id), this.errorHandler)
     }
 
-    public async getAll(): Promise<WithId<T>[]> {
+    public async getAll(options: Options<T> | null = null): Promise<WithId<T>[]> {
         try {
-            const models = await this.model.find()
+            const models = await (options === null ? this.model.find() : this.model.find({}, undefined, options))
             return models.map(it => convert<T>(it.toObject()))
         } catch (error) {
             if (error instanceof Error && !this.errorHandler(error))
@@ -75,8 +75,9 @@ export class DocumentModel<T extends ObjectType> implements Repository<T> {
         }
     }
 
-    public queryAll(): DocumentsArrayQueryBuilder<T> {
-        return new DocumentsArrayQueryBuilderImpl(this.model.find(), this.errorHandler)
+    public queryAll(options: Options<T> | null = null): DocumentsArrayQueryBuilder<T> {
+        const find = options === null ? this.model.find() : this.model.find({}, undefined, options)
+        return new DocumentsArrayQueryBuilderImpl(find, this.errorHandler)
     }
 
     public async exists(filter: Filter<T>): Promise<boolean> {
