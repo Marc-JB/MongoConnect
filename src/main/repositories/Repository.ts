@@ -5,9 +5,9 @@ import { ObjectType } from "../utils/typeUtils"
 export type Filter<T> = FilterQuery<T>
 
 export interface Options<T extends ObjectType> {
-    limit: number
-    skip: number
-    sort: {
+    limit?: number
+    skip?: number
+    sort?: {
         [K in keyof T]?: 1 | -1 | "asc" | "desc" | "ascending" | "descending"
     }
 }
