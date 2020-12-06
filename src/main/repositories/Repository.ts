@@ -61,6 +61,7 @@ export interface Repository<T extends ObjectType> {
      * @param filter The filter
      */
     filter(filter: Filter<T>): Promise<WithId<T>[]>
+    filterAndQuery(filter: Filter<T>): DocumentsArrayQueryBuilder<T>
 
     /**
      * Returns all models that match the filter, or an empty array if none
@@ -68,12 +69,14 @@ export interface Repository<T extends ObjectType> {
      * @param options Additional options
      */
     filter(filter: Filter<T>, options: Options<T>): Promise<WithId<T>[]>
+    filterAndQuery(filter: Filter<T>, options: Options<T>): DocumentsArrayQueryBuilder<T>
 
     /**
      * Returns all models that have a different value for the specified key
      * @param key The key for the value that has to be distinct
      */
     getDistinct(key: (keyof T) & string): Promise<WithId<T>[]>
+    queryDistinct(key: (keyof T) & string): DocumentsArrayQueryBuilder<T>
 
     /**
      * Returns all models that have a different value for the specified key
@@ -81,4 +84,5 @@ export interface Repository<T extends ObjectType> {
      * @param options Additional options
      */
     getDistinct(key: (keyof T) & string, options: Options<T>): Promise<WithId<T>[]>
+    queryDistinct(key: (keyof T) & string, options: Options<T>): DocumentsArrayQueryBuilder<T>
 }

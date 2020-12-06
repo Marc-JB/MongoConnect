@@ -1,4 +1,4 @@
-import { Model, Document } from "mongoose"
+import { Model, Document, Query } from "mongoose"
 import { convert } from "../convert"
 import { DocumentQueryBuilderImpl } from "../query_builders/DocumentQueryBuilderImpl"
 import { DocumentsArrayQueryBuilderImpl } from "../query_builders/DocumentsArrayQueryBuilderImpl"
@@ -121,6 +121,14 @@ export class DocumentModel<T extends ObjectType> implements Repository<T> {
         }
     }
 
+    public filterAndQuery(filter: Filter<T>, options: Options<T> | null = null): DocumentsArrayQueryBuilder<T> {
+        const find = options === null ? 
+            this.model.find(filter as DocumentFilter<T>) : 
+            this.model.find(filter as DocumentFilter<T>, undefined, options)
+
+        return new DocumentsArrayQueryBuilderImpl(find, this.errorHandler)
+    }
+
     public async getDistinct(key: (keyof T) & string, options: Options<T> | null = null): Promise<WithId<T>[]> {
         try {
             const models = await (options === null ? 
@@ -134,5 +142,13 @@ export class DocumentModel<T extends ObjectType> implements Repository<T> {
 
             return []
         }
+    }
+
+    public queryDistinct(key: (keyof T) & string, options: Options<T> | null = null): DocumentsArrayQueryBuilder<T> {
+        const distinct: Query<(Document & T)[]> = options === null ? 
+            this.model.distinct(key) : 
+            this.model.distinct(key, options)
+
+        return new DocumentsArrayQueryBuilderImpl(distinct, this.errorHandler)
     }
 }
