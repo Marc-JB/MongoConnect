@@ -25,8 +25,11 @@ export interface DocumentQueryBuilder<T extends ObjectType> {
      * @param key The key for the nested object/model
      * @param subKey The key for the value with the ID reference within the nested object/model
      */
-    inlineReferencedSubObject<R extends ObjectType>(
-        key: KeyWithSpecifiedValueType<T, ObjectType>, 
+    inlineReferencedSubObject<
+        R extends ObjectType, 
+        K extends KeyWithSpecifiedValueType<T, ObjectType>
+    >(
+        key: K, 
         subKey: KeyWithSpecifiedValueType<T[typeof key], string | ObjectWithID | null>
     ): DocumentQueryBuilder<ReplaceValueForKey<T, typeof key, ReplaceValueForKey<T[typeof key], typeof subKey, WithId<R> | null>>>
     
@@ -35,8 +38,11 @@ export interface DocumentQueryBuilder<T extends ObjectType> {
      * @param key The key for the nested object/model
      * @param subKey The key for the value with the ID reference within the nested object/model
      */
-    inlineReferencedSubObject<R extends ObjectType>(
-        key: KeyWithSpecifiedValueType<T, ObjectType>, 
+    inlineReferencedSubObject<
+        R extends ObjectType, 
+        K extends KeyWithSpecifiedValueType<T, ObjectType>
+    >(
+        key: K, 
         subKey: KeyWithSpecifiedValueType<T[typeof key], (string | ObjectWithID | null)[]>
     ): DocumentQueryBuilder<ReplaceValueForKey<T, typeof key, ReplaceValueForKey<T[typeof key], typeof subKey, WithId<R>[]>>>
     
@@ -45,8 +51,11 @@ export interface DocumentQueryBuilder<T extends ObjectType> {
      * @param key The key for the nested object/model
      * @param subKey The key for the value with the ID reference within the nested object/model
      */
-    inlineReferencedSubObject<R extends ObjectType>(
-        key: KeyWithSpecifiedValueType<T, ObjectType[]>, 
+    inlineReferencedSubObject<
+        R extends ObjectType, 
+        K extends KeyWithSpecifiedValueType<T, ObjectType[]>
+    >(
+        key: K, 
         subKey: KeyWithSpecifiedValueType<T[typeof key][0], string | ObjectWithID | null>
     ): DocumentQueryBuilder<ReplaceValueForKey<T, typeof key, ReplaceValueForKey<T[typeof key][0], typeof subKey, WithId<R> | null>[]>>
     
@@ -55,8 +64,11 @@ export interface DocumentQueryBuilder<T extends ObjectType> {
      * @param key The key for the nested object/model
      * @param subKey The key for the value with the ID reference within the nested object/model
      */
-    inlineReferencedSubObject<R extends ObjectType>(
-        key: KeyWithSpecifiedValueType<T, ObjectType[]>, 
+    inlineReferencedSubObject<
+        R extends ObjectType, 
+        K extends KeyWithSpecifiedValueType<T, ObjectType[]>
+    >(
+        key: K, 
         subKey: KeyWithSpecifiedValueType<T[typeof key][0], (string | ObjectWithID | null)[]>
     ): DocumentQueryBuilder<ReplaceValueForKey<T, typeof key, ReplaceValueForKey<T[typeof key][0], typeof subKey, WithId<R>[]>[]>>
     
@@ -85,8 +97,11 @@ export interface DocumentsArrayQueryBuilder<T extends ObjectType> {
      * @param key The key for the nested object/model
      * @param subKey The key for the value with the ID reference within the nested object/model
      */
-    inlineReferencedSubObject<R extends ObjectType>(
-        key: KeyWithSpecifiedValueType<T, ObjectType>, 
+    inlineReferencedSubObject<
+        R extends ObjectType, 
+        K extends KeyWithSpecifiedValueType<T, ObjectType>
+    >(
+        key: K, 
         subKey: KeyWithSpecifiedValueType<T[typeof key], string | ObjectWithID | null>
     ): DocumentsArrayQueryBuilder<ReplaceValueForKey<T, typeof key, ReplaceValueForKey<T[typeof key], typeof subKey, WithId<R> | null>>>
     
@@ -95,8 +110,11 @@ export interface DocumentsArrayQueryBuilder<T extends ObjectType> {
      * @param key The key for the nested object/model
      * @param subKey The key for the value with the ID reference within the nested object/model
      */
-    inlineReferencedSubObject<R extends ObjectType>(
-        key: KeyWithSpecifiedValueType<T, ObjectType>, 
+    inlineReferencedSubObject<
+        R extends ObjectType, 
+        K extends KeyWithSpecifiedValueType<T, ObjectType>
+    >(
+        key: K, 
         subKey: KeyWithSpecifiedValueType<T[typeof key], (string | ObjectWithID | null)[]>
     ): DocumentsArrayQueryBuilder<ReplaceValueForKey<T, typeof key, ReplaceValueForKey<T[typeof key], typeof subKey, WithId<R>[]>>>
     
@@ -105,8 +123,11 @@ export interface DocumentsArrayQueryBuilder<T extends ObjectType> {
      * @param key The key for the nested object/model
      * @param subKey The key for the value with the ID reference within the nested object/model
      */
-    inlineReferencedSubObject<R extends ObjectType>(
-        key: KeyWithSpecifiedValueType<T, ObjectType[]>, 
+    inlineReferencedSubObject<
+        R extends ObjectType, 
+        K extends KeyWithSpecifiedValueType<T, ObjectType[]>
+    >(
+        key: K, 
         subKey: KeyWithSpecifiedValueType<T[typeof key][0], string | ObjectWithID | null>
     ): DocumentsArrayQueryBuilder<ReplaceValueForKey<T, typeof key, ReplaceValueForKey<T[typeof key][0], typeof subKey, WithId<R> | null>[]>>
     
@@ -115,8 +136,11 @@ export interface DocumentsArrayQueryBuilder<T extends ObjectType> {
      * @param key The key for the nested object/model
      * @param subKey The key for the value with the ID reference within the nested object/model
      */
-    inlineReferencedSubObject<R extends ObjectType>(
-        key: KeyWithSpecifiedValueType<T, ObjectType[]>, 
+    inlineReferencedSubObject<
+        R extends ObjectType, 
+        K extends KeyWithSpecifiedValueType<T, ObjectType[]>
+    >(
+        key: K, 
         subKey: KeyWithSpecifiedValueType<T[typeof key][0], (string | ObjectWithID | null)[]>
     ): DocumentsArrayQueryBuilder<ReplaceValueForKey<T, typeof key, ReplaceValueForKey<T[typeof key][0], typeof subKey, WithId<R>[]>[]>>
     
